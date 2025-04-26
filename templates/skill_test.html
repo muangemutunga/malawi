@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Skill Assessment Test</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">Please answer all 10 questions to complete your application.</p>
+                
+                <form method="POST">
+                    {% for question in questions %}
+                    <div class="mb-4">
+                        <h5>{{ loop.index }}. {{ question.question_text }}</h5>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="q{{ question.id }}" id="q{{ question.id }}_a" value="a" required>
+                            <label class="form-check-label" for="q{{ question.id }}_a">{{ question.option_a }}</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="q{{ question.id }}" id="q{{ question.id }}_b" value="b">
+                            <label class="form-check-label" for="q{{ question.id }}_b">{{ question.option_b }}</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="q{{ question.id }}" id="q{{ question.id }}_c" value="c">
+                            <label class="form-check-label" for="q{{ question.id }}_c">{{ question.option_c }}</label>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="radio" name="q{{ question.id }}" id="q{{ question.id }}_d" value="d">
+                            <label class="form-check-label" for="q{{ question.id }}_d">{{ question.option_d }}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-primary w-100">Submit Test</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

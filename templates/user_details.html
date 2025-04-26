@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2>User Details</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone }}</p>
+                <p><strong>Test Score:</strong> {{ user.test_score }}/10</p>
+                <p><strong>Joined:</strong> {{ user.created_at.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Status:</strong> 
+                    {% if user.is_approved %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Pending Approval</span>
+                    {% endif %}
+                </p>
+                
+                <div class="mt-4">
+                    {% if user.is_approved %}
+                    <a href="{{ url_for('restrict_user', user_id=user.id) }}" class="btn btn-warning">Restrict User</a>
+                    {% else %}
+                    <a href="{{ url_for('approve_user', user_id=user.id) }}" class="btn btn-success">Approve User</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Documents</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>Resume/CV</h6>
+                    <a href="/{{ user.cv_path }}" target="_blank" class="btn btn-sm btn-outline-primary">View CV</a>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>ID/License (Front)</h6>
+                    <img src="/{{ user.id_front_path }}" class="img-fluid mb-2 border" style="max-height: 200px;">
+                    <a href="/{{ user.id_front_path }}" target="_blank" class="d-block">View Full Size</a>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>ID/License (Back)</h6>
+                    <img src="/{{ user.id_back_path }}" class="img-fluid mb-2 border" style="max-height: 200px;">
+                    <a href="/{{ user.id_back_path }}" target="_blank" class="d-block">View Full Size</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

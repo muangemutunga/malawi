@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row align-items-center hero-section">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold">Professional Data Annotation</h1>
+        <p class="lead mb-4">Join our team of data annotation experts or get your data annotated by professionals.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-md-2">Apply Now</a>
+            <a href="#services" class="btn btn-outline-primary btn-lg px-4">Get Started</a>
+        </div>
+    </div>
+    <div class="col-md-6 text-center">
+        <!-- Placeholder for hero image -->
+        <div class="hero-image-placeholder">
+            <div class="placeholder-text">Hero Image</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 pt-5 pb-3 text-center">
+    <div class="col-12">
+        <h2 class="section-heading">As Seen On</h2>
+    </div>
+</div>
+
+<div class="row pb-5 text-center as-seen-on">
+    <div class="col">
+        <img src="{{ url_for('static', filename='img/logo-placeholder-1.png') }}" alt="Media Logo 1" class="img-fluid media-logo">
+    </div>
+    <div class="col">
+        <img src="{{ url_for('static', filename='img/logo-placeholder-2.png') }}" alt="Media Logo 2" class="img-fluid media-logo">
+    </div>
+    <div class="col">
+        <img src="{{ url_for('static', filename='img/logo-placeholder-3.png') }}" alt="Media Logo 3" class="img-fluid media-logo">
+    </div>
+    <div class="col">
+        <img src="{{ url_for('static', filename='img/logo-placeholder-4.png') }}" alt="Media Logo 4" class="img-fluid media-logo">
+    </div>
+</div>
+
+<div id="services" class="row mt-5 pt-5">
+    <div class="col-12 text-center mb-4">
+        <h2 class="section-heading">Our Services</h2>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Image Annotation</h5>
+                <p class="card-text">High-quality bounding boxes, segmentation masks, and image classification.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Text Annotation</h5>
+                <p class="card-text">Named entity recognition, sentiment analysis, and text classification.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Audio Annotation</h5>
+                <p class="card-text">Speech recognition, audio transcription, and sound classification.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 pt-3 pb-5">
+    <div class="col-12 text-center">
+        <h2 class="section-heading mb-4">Ready to get started?</h2>
+        <a href="{{ url_for('register') }}" class="btn btn-lg btn-primary">Apply Now</a>
+    </div>
+</div>
+{% endblock %}

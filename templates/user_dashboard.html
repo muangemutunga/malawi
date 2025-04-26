@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ current_user.email }}</h2>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Available Tasks</h5>
+    </div>
+    <div class="card-body">
+        {% if tasks %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Client</th>
+                        <th>Posted</th>
+                        <th>Deadline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.client_name }}</td>
+                        <td>{{ task.posted_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ task.deadline.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% set user_bid = task.bids|selectattr('user_id', 'equalto', current_user.id)|first %}
+                            {% if user_bid %}
+                                {% if user_bid.is_approved %}
+                                <span class="badge bg-success">Approved</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">Pending Approval</span>
+                                {% endif %}
+                            {% else %}
+                            <form method="POST" action="{{ url_for('place_bid', task_id=task.id) }}">
+                                <button type="submit" class="btn btn-sm btn-primary">Bid</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No tasks available at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">My Bids</h5>
+    </div>
+    <div class="card-body">
+        {% if bids %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Bid Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bid in bids %}
+                    <tr>
+                        <td>{{ bid.task.title }}</td>
+                        <td>{{ bid.bid_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if bid.is_approved %}
+                            <span class="badge bg-success">Approved</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pending Approval</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">You haven't placed any bids yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2>Admin Dashboard</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{{ url_for('add_task') }}" class="btn btn-primary">Add New Task</a>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">Pending Approvals ({{ pending_users|length }})</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab">Tasks ({{ tasks|length }})</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="bids-tab" data-bs-toggle="tab" data-bs-target="#bids" type="button" role="tab">Bids ({{ bids|length }})</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Users ({{ users|length }})</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="adminTabsContent">
+    <!-- Pending Approvals Tab -->
+    <div class="tab-pane fade show active" id="pending" role="tabpanel">
+        {% if pending_users %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Test Score</th>
+                        <th>Applied On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in pending_users %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ user.test_score }}/10</td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('user_details', user_id=user.id) }}" class="btn btn-sm btn-info">View Details</a>
+                            <a href="{{ url_for('approve_user', user_id=user.id) }}" class="btn btn-sm btn-success">Approve</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No pending approvals.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Tasks Tab -->
+    <div class="tab-pane fade" id="tasks" role="tabpanel">
+        {% if tasks %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Client</th>
+                        <th>Posted</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.client_name }}</td>
+                        <td>{{ task.posted_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ task.deadline.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>
+                            <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this task?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No tasks available.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Bids Tab -->
+    <div class="tab-pane fade" id="bids" role="tabpanel">
+        {% if bids %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Task</th>
+                        <th>Bid Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bid in bids %}
+                    <tr>
+                        <td>{{ bid.applicant.email }}</td>
+                        <td>{{ bid.task.title }}</td>
+                        <td>{{ bid.bid_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ 'Approved' if bid.is_approved else 'Pending' }}</td>
+                        <td>
+                            {% if not bid.is_approved %}
+                            <a href="{{ url_for('approve_bid', bid_id=bid.id) }}" class="btn btn-sm btn-success">Approve</a>
+                            {% else %}
+                            <span class="badge bg-success">Approved</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No bids available.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Users Tab -->
+    <div class="tab-pane fade" id="users" role="tabpanel">
+        {% if users %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone }}</td>
+                        <td>{{ 'Active' if user.is_approved else 'Restricted' }}</td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('user_details', user_id=user.id) }}" class="btn btn-sm btn-info">View Details</a>
+                            {% if user.is_approved %}
+                            <a href="{{ url_for('restrict_user', user_id=user.id) }}" class="btn btn-sm btn-warning">Restrict</a>
+                            {% else %}
+                            <a href="{{ url_for('approve_user', user_id=user.id) }}" class="btn btn-sm btn-success">Approve</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No users available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
