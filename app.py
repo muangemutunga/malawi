@@ -398,24 +398,20 @@ def create_admin():
     return render_template('create_admin.html')
 
 # Initialize the database and add sample questions
-@app.cli.command("init-db")
-def init_db():
-    """Create all tables and default admin."""
-    with app.app_context():
-        db.create_all()
-        print("✔ Database tables created.")
 
-        if not User.query.filter_by(is_admin=True).first():
-            from werkzeug.security import generate_password_hash
-            admin = User(
-                email="admin@example.com",
-                password_hash=generate_password_hash("admin123"),
-                is_admin=True,
-                is_approved=True
-            )
-            db.session.add(admin)
-            db.session.commit()
-            print("✔ Admin user created.")
+@app.before_first_request
+def initialize_database():
+    db.create_all()
+    if not User.query.filter_by(is_admin=True).first():
+        admin = User(
+            email="admin@example.com",
+            password_hash=generate_password_hash("admin123"),
+            phone="000-000-0000",
+            is_admin=True,
+            is_approved=True
+        )
+        db.session.add(admin)
+        db.session.commit()            
 
     
     # Add sample questions if none exist
