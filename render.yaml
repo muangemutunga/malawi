@@ -1,9 +1,13 @@
 services:
   - type: web
     name: walawi-app
-    env: python
-    buildCommand: ""
-    startCommand: gunicorn app:app
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
     envVars:
+      - key: FLASK_APP
+        value: app.py
+      - key: FLASK_DEBUG
+        value: 0
       - key: SECRET_KEY
-        value: your-secret-key
+        generateValue: true
