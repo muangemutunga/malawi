@@ -401,6 +401,19 @@ def create_admin():
 @app.cli.command("init-db")
 def init_db():
     db.create_all()
+    print("Database tables created.")
+
+    if not User.query.filter_by(is_admin=True).first():
+        admin = User(
+            email="admin@example.com",
+            password_hash=generate_password_hash("admin123"),
+            is_admin=True,
+            is_approved=True,
+        )
+        db.session.add(admin)
+        db.session.commit()
+        print("Admin user created.")
+
     
     # Add sample questions if none exist
     if Question.query.count() == 0:
